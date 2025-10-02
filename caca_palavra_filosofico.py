@@ -153,14 +153,12 @@ def main():
         st.success("🎉 Parabéns! Você completou esta fase!")
 
         if fase_atual < len(fases):
-            if st.button("➡️ Ir para a próxima fase"):
-                # Atualiza a fase e reinicia o jogo
-                st.session_state["fase"] = fase_atual + 1
-                st.session_state["achadas"] = []
-                st.session_state["grid"] = None  # para recriar o grid na nova fase
-                st.experimental_rerun()
+        st.session_state["fase"] = fase_atual + 1
+        st.experimental_rerun()
+
         else:
             st.success("🏆 Você completou todas as fases! 🎊")
 
 if __name__ == "__main__":
     main()
+
