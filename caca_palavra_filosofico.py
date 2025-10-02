@@ -13,7 +13,7 @@ fases = {
         "words": {
             "METAFÍSICA": "Estudo do ser e da realidade além do físico.",
             "EPISTEMOLOGIA": "Estudo do conhecimento e da sua validade.",
-            " MILETO": ""
+            " MILETO": "Tales de Mileto foi um importante pensador, filósofo e matemático grego pré-socrático"
         }
     },
     3: {
