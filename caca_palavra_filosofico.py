@@ -13,7 +13,7 @@ fases = {
         "words": {
             "METAFÍSICA": "Estudo do ser e da realidade além do físico.",
             "EPISTEMOLOGIA": "Estudo do conhecimento e da sua validade.",
-            "DEMOCRACIA": "Forma de governo baseada na soberania popular."
+            " MILETO": ""
         }
     },
     3: {
@@ -164,6 +164,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
