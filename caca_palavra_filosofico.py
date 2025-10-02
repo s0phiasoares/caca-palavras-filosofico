@@ -56,12 +56,12 @@ def cria_grid(palavras, size=10):
 
 def mostrar_grid(grid):
     """Mostra o grid como texto formatado com fonte monoespaçada"""
-    st.write("### Caça-Palavras")
+    st.write("### 🔍 Caça-Palavras de Filosofia")
     texto = "\n".join(" ".join(linha) for linha in grid)
     st.markdown(f"```\n{texto}\n```")
 
 def main():
-    st.title("Caça-Palavras de Filosofia")
+    st.title("🧠 Caça-Palavras de Filosofia 🧩")
     
     fase_atual = st.session_state.get("fase", 1)
     palavras = list(fases[fase_atual]["words"].keys())
@@ -78,36 +78,36 @@ def main():
     
     mostrar_grid(grid)
     
-    st.write(f"Fase {fase_atual} - Encontre as palavras relacionadas à Filosofia.")
+    st.write(f"🎯 **Fase {fase_atual}** - Encontre as palavras relacionadas à Filosofia.")
     
-    palavra_input = st.text_input("Digite a palavra que encontrou (em maiúsculas):").strip().upper()
+    palavra_input = st.text_input("Digite a palavra que encontrou (em maiúsculas) ✍️:").strip().upper()
     
-    if st.button("Verificar"):
+    if st.button("🔎 Verificar"):
         if palavra_input in palavras and palavra_input not in achadas:
             achadas.append(palavra_input)
-            st.success(f"Você encontrou: {palavra_input}!")
-            st.info(f"Significado: {significados[palavra_input]}")
-            
-            # Salvar estado
             st.session_state["achadas"] = achadas
+            st.success(f"✅ Você encontrou: **{palavra_input}**!")
+            st.info(f"📚 Significado: {significados[palavra_input]}")
             
             # Verificar se completou todas palavras da fase
             if len(achadas) == len(palavras):
                 st.balloons()
-                st.success("Parabéns! Você completou esta fase!")
+                st.success("🎉 Parabéns! Você completou esta fase!")
                 if fase_atual < len(fases):
-                    if st.button("Ir para a próxima fase"):
+                    if st.button("➡️ Ir para a próxima fase"):
                         st.session_state["fase"] = fase_atual + 1
                         st.experimental_rerun()
                 else:
-                    st.success("Você completou todas as fases!")
+                    st.success("🏆 Você completou todas as fases! 🎊")
         elif palavra_input in achadas:
-            st.warning("Você já encontrou essa palavra.")
+            st.warning("⚠️ Você já encontrou essa palavra.")
         else:
-            st.error("Palavra incorreta ou não pertence à fase atual.")
+            st.error("❌ Palavra incorreta ou não pertence à fase atual.")
 
 if __name__ == "__main__":
     main()
+
+
 
 
 
