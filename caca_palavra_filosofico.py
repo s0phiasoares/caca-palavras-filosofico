@@ -75,13 +75,7 @@ fases = {
 }
 
 def cria_grid(palavras, size=12):
-    # Ajusta o tamanho do grid conforme a maior palavra
-    max_len = max(len(palavra) for palavra in palavras)
-    size_ideal = max(max_len + 3, size)  # +3 pra dar espaço extra
-    size_ideal = min(size_ideal, 20)  # limita tamanho máximo para 20
-
-    grid = [[" " for _ in range(size_ideal)] for _ in range(size_ideal)]
-
+    grid = [[" " for _ in range(size)] for _ in range(size)]
     for palavra in palavras:
         palavra = palavra.upper()
         colocada = False
@@ -89,24 +83,23 @@ def cria_grid(palavras, size=12):
         while not colocada and tentativas < 200:
             orientacao = random.choice(["horizontal", "vertical"])
             if orientacao == "horizontal":
-                linha = random.randint(0, size_ideal-1)
-                col = random.randint(0, size_ideal - len(palavra))
+                linha = random.randint(0, size-1)
+                col = random.randint(0, size - len(palavra))
                 if all(grid[linha][col+i] in [" ", palavra[i]] for i in range(len(palavra))):
                     for i in range(len(palavra)):
                         grid[linha][col+i] = palavra[i]
                     colocada = True
             else:
-                linha = random.randint(0, size_ideal - len(palavra))
-                col = random.randint(0, size_ideal-1)
+                linha = random.randint(0, size - len(palavra))
+                col = random.randint(0, size-1)
                 if all(grid[linha+i][col] in [" ", palavra[i]] for i in range(len(palavra))):
                     for i in range(len(palavra)):
                         grid[linha+i][col] = palavra[i]
                     colocada = True
             tentativas += 1
-
     letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZÁÉÍÓÚÇ"
-    for i in range(size_ideal):
-        for j in range(size_ideal):
+    for i in range(size):
+        for j in range(size):
             if grid[i][j] == " ":
                 grid[i][j] = random.choice(letras)
     return grid
@@ -119,7 +112,7 @@ def mostrar_grid(grid):
 def main():
     st.title("🧠 Caça-Palavras de Filosofia 🧩")
 
-    # Inicializa variáveis de sessão
+    # Inicializa a fase
     if "fase" not in st.session_state:
         st.session_state["fase"] = 1
         st.session_state["achadas"] = []
@@ -130,7 +123,7 @@ def main():
     palavras = list(fases[fase_atual]["words"].keys())
     significados = fases[fase_atual]["words"]
 
-    # Cria grid se necessário
+    # Inicializa o grid se necessário
     if st.session_state["grid"] is None:
         st.session_state["grid"] = cria_grid(palavras)
 
@@ -143,29 +136,36 @@ def main():
         for p in st.session_state["achadas"]:
             st.write(f"- **{p}**")
 
-    palavra_input = st.text_input("Digite a palavra que encontrou (em maiúsculas) ✍️:").strip().upper()
+    palavra_input = st.text_input("Digite a palavra que encontrou (em maiúsculas) ✍️:", key="input_palavra").strip().upper()
 
+    # Verificação automática sem botão
     if palavra_input:
         if palavra_input in palavras and palavra_input not in st.session_state["achadas"]:
             st.session_state["achadas"].append(palavra_input)
             st.session_state["mensagem"] = f"✅ Você encontrou: **{palavra_input}**!\n📚 Significado: {significados[palavra_input]}"
+            # Limpa o input para nova palavra
+            st.session_state["input_palavra"] = ""
         elif palavra_input in st.session_state["achadas"]:
             st.session_state["mensagem"] = "⚠️ Você já encontrou essa palavra."
+            st.session_state["input_palavra"] = ""
         else:
             st.session_state["mensagem"] = "❌ Palavra incorreta ou não pertence à fase atual."
+            st.session_state["input_palavra"] = ""
 
     if st.session_state["mensagem"]:
         st.markdown(st.session_state["mensagem"])
 
+    # Se completou a fase
     if len(st.session_state["achadas"]) == len(palavras):
         st.balloons()
         st.success("🎉 Parabéns! Você completou esta fase!")
 
         if fase_atual < len(fases):
             if st.button("➡️ Ir para a próxima fase"):
+                # Atualiza a fase e reinicia o jogo
                 st.session_state["fase"] = fase_atual + 1
                 st.session_state["achadas"] = []
-                st.session_state["grid"] = None
+                st.session_state["grid"] = None  # para recriar o grid na nova fase
                 st.session_state["mensagem"] = ""
                 st.experimental_rerun()
         else:
