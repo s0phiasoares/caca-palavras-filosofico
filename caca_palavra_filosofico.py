@@ -1,7 +1,6 @@
 import streamlit as st
 import random
 
-# Palavras e significados por fase
 fases = {
     1: {
         "words": {
@@ -76,9 +75,7 @@ fases = {
 }
 
 def cria_grid(palavras, size=12):
-    """Cria um grid de caça-palavra com palavras escondidas"""
     grid = [[" " for _ in range(size)] for _ in range(size)]
-    
     for palavra in palavras:
         palavra = palavra.upper()
         colocada = False
@@ -100,7 +97,6 @@ def cria_grid(palavras, size=12):
                         grid[linha+i][col] = palavra[i]
                     colocada = True
             tentativas += 1
-    
     letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZÁÉÍÓÚÇ"
     for i in range(size):
         for j in range(size):
@@ -109,55 +105,59 @@ def cria_grid(palavras, size=12):
     return grid
 
 def mostrar_grid(grid):
-    """Mostra o grid como texto formatado com fonte monoespaçada"""
     st.write("🔍 Caça-Palavras ")
     texto = "\n".join(" ".join(linha) for linha in grid)
     st.markdown(f"```\n{texto}\n```")
 
 def main():
     st.title("🧠 Caça-Palavras de Filosofia 🧩")
-    
-    fase_atual = st.session_state.get("fase", 1)
+
+    # Inicializa a fase
+    if "fase" not in st.session_state:
+        st.session_state["fase"] = 1
+        st.session_state["achadas"] = []
+        st.session_state["grid"] = None
+
+    fase_atual = st.session_state["fase"]
     palavras = list(fases[fase_atual]["words"].keys())
     significados = fases[fase_atual]["words"]
-    
-    if "grid" not in st.session_state or st.session_state.get("fase") != fase_atual:
+
+    # Inicializa o grid se necessário
+    if st.session_state["grid"] is None:
         st.session_state["grid"] = cria_grid(palavras)
-        st.session_state["achadas"] = []
-        st.session_state["fase"] = fase_atual
-    
-    grid = st.session_state["grid"]
-    achadas = st.session_state["achadas"]
-    
-    mostrar_grid(grid)
-    
+
+    mostrar_grid(st.session_state["grid"])
+
     st.write(f"🎯 **Fase {fase_atual}** - Encontre as palavras relacionadas à Filosofia.")
-    
-    if achadas:
+
+    if st.session_state["achadas"]:
         st.markdown("### ✅ Palavras encontradas:")
-        for p in achadas:
+        for p in st.session_state["achadas"]:
             st.write(f"- **{p}**")
-    
+
     palavra_input = st.text_input("Digite a palavra que encontrou (em maiúsculas) ✍️:").strip().upper()
-    
+
     if st.button("🔎 Verificar"):
-        if palavra_input in palavras and palavra_input not in achadas:
-            achadas.append(palavra_input)
-            st.session_state["achadas"] = achadas
+        if palavra_input in palavras and palavra_input not in st.session_state["achadas"]:
+            st.session_state["achadas"].append(palavra_input)
             st.success(f"✅ Você encontrou: **{palavra_input}**!")
             st.info(f"📚 Significado: {significados[palavra_input]}")
-        elif palavra_input in achadas:
+        elif palavra_input in st.session_state["achadas"]:
             st.warning("⚠️ Você já encontrou essa palavra.")
         else:
             st.error("❌ Palavra incorreta ou não pertence à fase atual.")
-    
-    if len(achadas) == len(palavras):
+
+    # Se completou a fase
+    if len(st.session_state["achadas"]) == len(palavras):
         st.balloons()
         st.success("🎉 Parabéns! Você completou esta fase!")
-        
+
         if fase_atual < len(fases):
             if st.button("➡️ Ir para a próxima fase"):
+                # Atualiza a fase e reinicia o jogo
                 st.session_state["fase"] = fase_atual + 1
+                st.session_state["achadas"] = []
+                st.session_state["grid"] = None  # para recriar o grid na nova fase
                 st.experimental_rerun()
         else:
             st.success("🏆 Você completou todas as fases! 🎊")
