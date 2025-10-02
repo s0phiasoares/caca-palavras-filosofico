@@ -80,6 +80,12 @@ def main():
     
     st.write(f"🎯 **Fase {fase_atual}** - Encontre as palavras relacionadas à Filosofia.")
     
+    # Mostrar palavras já encontradas
+    if achadas:
+        st.markdown("### ✅ Palavras encontradas:")
+        for p in achadas:
+            st.write(f"- **{p}**")
+    
     palavra_input = st.text_input("Digite a palavra que encontrou (em maiúsculas) ✍️:").strip().upper()
     
     if st.button("🔎 Verificar"):
@@ -106,11 +112,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
 
