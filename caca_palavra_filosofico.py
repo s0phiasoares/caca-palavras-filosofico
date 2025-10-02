@@ -152,13 +152,15 @@ def main():
         st.balloons()
         st.success("🎉 Parabéns! Você completou esta fase!")
 
-        if fase_atual < len(fases):
-        st.session_state["fase"] = fase_atual + 1
-        st.experimental_rerun()
+         if fase_atual < len(fases):
+          if st.button("➡️ Ir para a próxima fase"):
+            st.session_state["fase"] = fase_atual + 1
+            st.experimental_rerun()
 
         else:
             st.success("🏆 Você completou todas as fases! 🎊")
 
 if __name__ == "__main__":
     main()
+
 
