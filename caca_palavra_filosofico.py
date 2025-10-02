@@ -56,7 +56,7 @@ def cria_grid(palavras, size=10):
 
 def mostrar_grid(grid):
     """Mostra o grid como texto formatado com fonte monoespaçada"""
-    st.write("### 🔍 Caça-Palavras de Filosofia")
+    st.write("### 🔍 Caça-Palavras fisiológico")
     texto = "\n".join(" ".join(linha) for linha in grid)
     st.markdown(f"```\n{texto}\n```")
 
@@ -106,6 +106,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
