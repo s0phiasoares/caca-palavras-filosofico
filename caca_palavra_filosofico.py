@@ -74,7 +74,7 @@ fases = {
     }
 }
 
-def cria_grid(palavras, size=12):
+def cria_grid(palavras, size=20):
     grid = [[" " for _ in range(size)] for _ in range(size)]
     for palavra in palavras:
         palavra = palavra.upper()
