@@ -55,10 +55,10 @@ def cria_grid(palavras, size=10):
     return grid
 
 def mostrar_grid(grid):
-    """Mostra o grid como tabela no streamlit"""
+    """Mostra o grid como texto formatado com fonte monoespaçada"""
     st.write("### Caça-Palavras")
-    for linha in grid:
-        st.write(" ".join(linha))
+    texto = "\n".join(" ".join(linha) for linha in grid)
+    st.markdown(f"```\n{texto}\n```")
 
 def main():
     st.title("Caça-Palavras de Filosofia")
