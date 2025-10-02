@@ -117,7 +117,6 @@ def main():
         st.session_state["fase"] = 1
         st.session_state["achadas"] = []
         st.session_state["grid"] = None
-        st.session_state["mensagem"] = ""
 
     fase_atual = st.session_state["fase"]
     palavras = list(fases[fase_atual]["words"].keys())
@@ -136,24 +135,17 @@ def main():
         for p in st.session_state["achadas"]:
             st.write(f"- **{p}**")
 
-    palavra_input = st.text_input("Digite a palavra que encontrou (em maiúsculas) ✍️:", key="input_palavra").strip().upper()
+    palavra_input = st.text_input("Digite a palavra que encontrou (em maiúsculas) ✍️:").strip().upper()
 
-    # Verificação automática sem botão
-    if palavra_input:
+    if st.button("🔎 Verificar"):
         if palavra_input in palavras and palavra_input not in st.session_state["achadas"]:
             st.session_state["achadas"].append(palavra_input)
-            st.session_state["mensagem"] = f"✅ Você encontrou: **{palavra_input}**!\n📚 Significado: {significados[palavra_input]}"
-            # Limpa o input para nova palavra
-            st.session_state["input_palavra"] = ""
+            st.success(f"✅ Você encontrou: **{palavra_input}**!")
+            st.info(f"📚 Significado: {significados[palavra_input]}")
         elif palavra_input in st.session_state["achadas"]:
-            st.session_state["mensagem"] = "⚠️ Você já encontrou essa palavra."
-            st.session_state["input_palavra"] = ""
+            st.warning("⚠️ Você já encontrou essa palavra.")
         else:
-            st.session_state["mensagem"] = "❌ Palavra incorreta ou não pertence à fase atual."
-            st.session_state["input_palavra"] = ""
-
-    if st.session_state["mensagem"]:
-        st.markdown(st.session_state["mensagem"])
+            st.error("❌ Palavra incorreta ou não pertence à fase atual.")
 
     # Se completou a fase
     if len(st.session_state["achadas"]) == len(palavras):
@@ -166,7 +158,6 @@ def main():
                 st.session_state["fase"] = fase_atual + 1
                 st.session_state["achadas"] = []
                 st.session_state["grid"] = None  # para recriar o grid na nova fase
-                st.session_state["mensagem"] = ""
                 st.experimental_rerun()
         else:
             st.success("🏆 Você completou todas as fases! 🎊")
