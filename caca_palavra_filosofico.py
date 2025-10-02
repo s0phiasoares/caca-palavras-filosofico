@@ -158,7 +158,7 @@ def main():
                 st.session_state["fase"] = fase_atual + 1
                 st.session_state["achadas"] = []
                 st.session_state["grid"] = None  # para recriar o grid na nova fase
-                st.experimental_rerun()
+                st.rerun()
         else:
             st.success("🏆 Você completou todas as fases! 🎊")
 
